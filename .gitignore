@@ -1,0 +1,7 @@
+key/*
+.terraform/*
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+plan
+terraform.tfstate
+terraform.tfstate.backup

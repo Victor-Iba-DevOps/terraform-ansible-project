@@ -1,0 +1,52 @@
+- name: Apache playbook
+  hosts: all
+  remote_user: ansible
+  become: yes
+
+  vars:
+    app_user: "www-data"
+    http_host: "ansible.com"
+    http_conf: "ansible.com.conf"
+    http_port: "80"
+
+  tasks:
+
+  - name: Apache is installed and is of the latest version
+    ansible.builtin.apt:
+      name: apache2
+      state: latest
+
+  - name: Apache service is started
+    ansible.builtin.service:
+      name: apache2
+      state: started
+      enabled: yes
+
+  - name: Document root exist
+    ansible.builtin.file:
+      path: "/var/www/{{ http_host }}"
+      state: directory
+      owner: "{{ app_user }}"
+      mode: '0755'
+
+  - name: Custom index.html
+    ansible.builtin.copy:
+      dest: "/var/www/{{ http_host }}/index.html"
+      content: |
+                  Ansible-Terraform training apache example web page.
+  
+  - name: Set up Apache virtualhost
+    ansible.builtin.template:
+      src: "templates/apache.conf.j2"
+      dest: "/etc/apache2/sites-available/{{ http_conf }}"
+
+  - name: Enable new site
+    ansible.builtin.command: "/usr/sbin/a2ensite {{ http_conf }}"
+  
+  - name: Disable default Apache site
+    ansible.builtin.command: "/usr/sbin/a2dissite 000-default.conf"
+
+  - name: Restart Apache
+    ansible.builtin.service:
+      name: apache2
+      state: reloaded

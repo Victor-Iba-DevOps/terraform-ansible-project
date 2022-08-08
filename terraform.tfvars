@@ -1,0 +1,7 @@
+project          = "tf-course-35721"
+credentials_file = "./key/tf-course-35721-638b2cd8f219.json"
+region           = "europe-central2"
+zone             = "europe-central2-a"
+ssh_key_file     = "./key/ansible_vm_key.pub"
+ssh_user         = "ansible"
+ansible_playbook = "apache-playbook.yml"
